@@ -1,6 +1,6 @@
 # StrDiffusion
 
-### [Paper](https://github.com/htyjers/StrDiffusion) | [Supplementary Material](https://github.com/htyjers/StrDiffusion) 
+### [Paper](https://github.com/htyjers/StrDiffusion) | [Supplementary Material](https://github.com/htyjers/StrDiffusion) | [BibTex](https://github.com/htyjers/StrDiffusion#Citation)
 
 This repository is the official code for the paper "Structure Matters: Tackling the Semantic Discrepancy in Diffusion Models for Image Inpainting" by Haipeng Liu (hpliu_hfut@hotmail.com), Yang Wang (corresponding author: yangwang@hfut.edu.cn), Biao Qian, Meng Wang, Yong Rui. *CVPR 2024, Seattle, USA*
 
