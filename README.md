@@ -7,19 +7,6 @@ This repository is the official code for the paper "Structure Matters: Tackling 
 In this paper, we propose a novel structure-guided diffusion model for image inpainting (namely \textbf{StrDiffusion}), which reformulates the conventional texture denoising process under the guidance of the structure to derive a simplified denoising objective (**_Eq.11_**) for inpainting, while revealing:  1) unlike the texture, the semantically sparse structure is beneficial to tackle the semantic discrepancy;  2) the semantics from the unmasked regions essentially offer the time-dependent guidance for the texture denoising process, benefiting from the time-dependent sparsity of the structure semantics.
 For the denoising process, a structure-guided neural network is trained to estimate the simplified denoising objective by exploiting the consistency of the denoised structure between masked and unmasked regions. Besides, we devise an adaptive resampling strategy as a formal criterion on whether the structure is competent to guide the texture denoising process, while regulate their semantic correlations. 
 
-We reformulate the denoising objective for inpainting as below:
-
-$$
-\begin{equation}
-\begin{split}
-\tilde{y}_{t-1}^{*}=&\underbrace{ \left(\frac{1- e^{-2\overline{\theta}_{t-1}}}{1- e^{-2\overline{\delta}_{t}}}e^{-\delta_{t}^{'}}\right) (x_{t}-\mu_{x})}_{\text{Consistency term for masked regions}} \\
-&-\underbrace{ \left(\frac{1- e^{-2\overline{\theta}_{t-1}}}{1- e^{-2\overline{\delta}_{t}}}e^{-\delta_{t}^{'}}\right)e^{-\overline{\delta}_{t}} (x_{0}-\mu_{x})}_{\text{Balance term for masked regions}} \\
-& +\underbrace{e^{-\overline{\theta}_{t-1}} (y_{0}-\mu_{y})}_{\text{Semantics term for masked regions}} + \underbrace{\mu_{y}}_{\text{Unmasked regions}}.
-\end{split}
-\end{equation}
-$$
-
-
 
 ![](https://github.com/htyjers/StrDiffusion/tree/main/image/image3.png)
 <p align="center">Figure 1. Illustration of the proposed StrDiffusion pipeline.</p>
