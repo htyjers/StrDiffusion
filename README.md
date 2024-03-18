@@ -112,3 +112,4 @@ If any part of our paper and repository is helpful to your work, please generous
 This implementation is based on / inspired by:
 
 * [https://github.com/Algolzw/image-restoration-sde](https://github.com/Algolzw/image-restoration-sde) (Image Restoration SDE)
+* [https://github.com/andreas128/RePaint](https://github.com/andreas128/RePaint) (RePaint)
