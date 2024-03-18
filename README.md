@@ -76,8 +76,22 @@ Python3 ./test/texture/config/inpainting/test.py
 
 - Visual comparison between our method and the competitors.
 
-![](https://github.com/htyjers/StrDiffusion/tree/main/image/image1.bmp)
+![](https://github.com/htyjers/StrDiffusion/tree/main/image/image1.png)
 
 - Visualization of the denoised results for IR-SDE and StrDiffusion during the denoising process,
 
 ![](https://github.com/htyjers/StrDiffusion/tree/main/image/image2.png)
+
+
+#
+## Citation
+
+If any part of our paper and repository is helpful to your work, please generously cite with:
+
+```
+
+```
+
+This implementation is based on / inspired by:
+
+* [https://github.com/Algolzw/image-restoration-sde](https://github.com/Algolzw/image-restoration-sde) (Image Restoration SDE)
