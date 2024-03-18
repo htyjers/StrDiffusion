@@ -290,7 +290,7 @@ class IRSDE(SDE):
         xs = S_LQ.clone()
 
         for t in tqdm(reversed(range(1, T+1))):
-            xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda() ##产生想要structure.
+            xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
