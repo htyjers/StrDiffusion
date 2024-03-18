@@ -299,7 +299,9 @@ class IRSDE(SDE):
             x_yuan_tmp = self.reverse_sde_step(x_yuan, score, t)
             xs_tmp = xs
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach() * mask.cuda()).view(-1)
-            u = 3#15 
+            u = 3
+            # T=100,U=15,g=3
+            # T=400,U=3,g=2
             
             i=0
             for i in range(1,u):
