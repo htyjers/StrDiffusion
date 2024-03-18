@@ -309,7 +309,7 @@ class IRSDE(SDE):
                 if i <= u // 2:
                     g = 1
                 else:
-                    g = 2#3
+                    g = 2
                 if g + t > T:
                     g = T - t + 1
                     
