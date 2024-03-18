@@ -8,10 +8,10 @@ In this paper, we propose a novel structure-guided diffusion model for image inp
 For the denoising process, a structure-guided neural network is trained to estimate the simplified denoising objective by exploiting the consistency of the denoised structure between masked and unmasked regions. Besides, we devise an adaptive resampling strategy as a formal criterion on whether the structure is competent to guide the texture denoising process, while regulate their semantic correlations. 
 
 
-![](https://github.com/htyjers/StrDiffusion/tree/main/image/image3.png)
+![](image/image3.png)
 <p align="center">Figure 1. Illustration of the proposed StrDiffusion pipeline.</p>
 
-![](https://github.com/htyjers/StrDiffusion/tree/main/image/image4.png)
+![](image/image4.png)
 <p align="center">Figure 2. Illustration of the adaptive resampling strategy.</p>
 
 In summary, our StrDiffusion reveals: 
@@ -93,11 +93,11 @@ Python3 ./test/texture/config/inpainting/test.py
 
 - Visual comparison between our method and the competitors.
 
-![](https://github.com/htyjers/StrDiffusion/tree/main/image/image1.png)
+![](image/image1.png)
 
 - Visualization of the denoised results for IR-SDE and StrDiffusion during the denoising process,
 
-![](https://github.com/htyjers/StrDiffusion/tree/main/image/image2.png)
+![](image/image2.png)
 
 
 #
