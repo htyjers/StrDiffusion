@@ -33,7 +33,7 @@ In summary, our StrDiffusion reveals:
 * pytorch >= 1.13.0
 * Python packages: `pip install -r requirements.txt`
 
-## Train Structure Denoising Model
+## Train-[Structure Denoising Model]
 1. Dataset Preparation:
    
    Download mask and image datasets, then get into the `StrDiffusion/train/structure` directory and modify the dataset paths in option files in `/config/inpainting/options/train/ir-sde.yml`
@@ -45,7 +45,7 @@ In summary, our StrDiffusion reveals:
 Python3 ./train/structure/config/inpainting/train.py
 ```
 
-## Train Texture Denoising Model
+## Train-[Texture Denoising Model]
 1. Dataset Preparation:
    
    Download mask and image datasets, then get into the `StrDiffusion/train/texture` directory and modify the dataset paths in option files in `/config/inpainting/options/train/ir-sde.yml`
@@ -57,7 +57,7 @@ Python3 ./train/structure/config/inpainting/train.py
 Python3 ./train/texture/config/inpainting/train.py
 ```
 
-## Train Discriminator Network
+## Train-[Discriminator Network]
 1. Dataset Preparation:
 
    Download mask and image datasets, then get into the `StrDiffusion/train/discriminator` directory and modify the dataset paths in option files in `/config/inpainting/options/train/ir-sde.yml`
@@ -69,7 +69,7 @@ Python3 ./train/texture/config/inpainting/train.py
 Python3 ./train/discriminator/config/inpainting/train.py
 ```
 
-## Test StrDiffusion
+## Test-[StrDiffusion]
 1. Dataset Preparation:
 
    Download mask and image datasets, then get into the `StrDiffusion/test/texture` directory and modify the dataset paths in option files in `/config/inpainting/options/test/ir-sde.yml`
