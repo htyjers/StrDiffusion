@@ -274,7 +274,5 @@ class DenoisingModel(BaseModel):
             self.load_network(load_path_Gs, self.models, self.opt["path"]["strict_load"])
 
     def save(self, iter_label):
-        self.save_network(self.model, "G", iter_label)
         self.save_network(self.dis, "D", iter_label)
-        self.save_network(self.ema.ema_model, "EMA", 'lastest')
         
