@@ -17,7 +17,7 @@ For the denoising process, a structure-guided neural network is trained to estim
 <p align="center">Figure 2. Illustration of the adaptive resampling strategy.</p>
 
 In summary, our StrDiffusion reveals: 
-- The semantically sparse structure encourages the consistent semantics for the denoised results; 
+- the semantically _sparse_ structure encourages the consistent semantics for the denoised results in the early stage, while the _dense_ texture carries out the semantic generation in the late stage; 
 - The semantics from the unmasked regions essenially offer the time-dependent guidance for the texture denoising process, benefiting from the time-dependent sparsity of the structure semantics.
 - We remark that whether the structure guides the texture well greatly depends on the semantic correlation between them. As inspired, an adaptive resampling strategy comes up to monitor the semantic correlation and regulate it via the resampling iteration
 
