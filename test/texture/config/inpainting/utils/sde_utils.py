@@ -297,6 +297,9 @@ class IRSDE(SDE):
            
             score= self.score_fn(x_yuan, t, xs, **kwargs)
             x_yuan_tmp = self.reverse_sde_step(x_yuan, score, t)
+
+            #Adaptive Resampling Strategy
+            ##############################
             xs_tmp = xs
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach() * mask.cuda()).view(-1)
             u = 3
@@ -327,7 +330,7 @@ class IRSDE(SDE):
                     xs = xs1
                 else:
                     break
-
+            ##############################
             
             x_yuan = x_yuan_tmp
 
