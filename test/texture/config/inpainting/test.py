@@ -118,7 +118,7 @@ def main():
     for phase, dataset_opt in sorted(opt["datasets"].items()):
         test_set = create_dataset(dataset_opt)
         test_loader = create_dataloader(test_set, dataset_opt)
-        train_loader_mask = DataLoader(train_set_mask, batch_size=1,shuffle=False)#
+        train_loader_mask = DataLoader(train_set_mask, batch_size=1,shuffle=True)#
         logger.info(
         "Number of test images in [{:s}]: {:d}".format(
             dataset_opt["name"], len(test_set)
