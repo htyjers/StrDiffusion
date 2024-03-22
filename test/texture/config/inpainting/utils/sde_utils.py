@@ -300,7 +300,6 @@ class IRSDE(SDE):
 
             #Adaptive Resampling Strategy
             ##############################
-            xs_tmp = xs
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach() * mask.cuda()).view(-1)
             u = 3
             # T=100,U=15,g=3
