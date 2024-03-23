@@ -231,15 +231,6 @@ class IRSDE(SDE):
         return x
     
 
-    '''
-    def optimal_reverse(self, xt, x0, T=-1):
-        T = self.T if T < 0 else T
-        x = xt.clone()
-        for t in tqdm(reversed(range(1, T + 1))):
-            x = self.reverse_optimum_step(x, x0, t)
-
-        return x
-    '''
     def compute_alpha(self, beta, t):
         beta = torch.cat([torch.zeros(1), torch.tensor(beta)], dim=0)
         a = (1 - beta).cumprod(dim=0).index_select(0, t + 1).view(-1, 1, 1, 1)
@@ -301,9 +292,9 @@ class IRSDE(SDE):
             #Adaptive Resampling Strategy
             ##############################
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach() * mask.cuda()).view(-1)
-            u = 3
-            # T=100,U=15,g=3
-            # T=400,U=3,g=2
+            u = 4
+            # T=100,U=15,g=2
+            # T=400,U=4,g=1
             
             i=0
             for i in range(1,u):
@@ -311,16 +302,18 @@ class IRSDE(SDE):
                 if i <= u // 2:
                     g = 1
                 else:
-                    g = 2
+                    g = 1
                 if g + t > T:
                     g = T - t + 1
                     
                 for j in range(0,g):
                     xs1 = S_sde.forward_step(xs1,t-1+j)
                 for z in reversed(range(0,j+1)):
+                    xs1_optimum = S_sde.reverse_optimum_step(xs1.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t+z).cuda()
                     scores = S_sde.score_fn(xs1, t+z)
                     xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
-                xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
+                    xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
+                    
                 score = self.score_fn(x_yuan, t, xs1, **kwargs)
                 x_tmp = self.reverse_sde_step(x_yuan, score, t)
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach() * mask.cuda()).view(-1)
