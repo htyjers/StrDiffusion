@@ -312,7 +312,7 @@ class IRSDE(SDE):
                     xs1_optimum = S_sde.reverse_optimum_step(xs1.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t+z).cuda()
                     scores = S_sde.score_fn(xs1, t+z)
                     xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
-                    xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
+                    xs1 = xs1_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     
                 score = self.score_fn(x_yuan, t, xs1, **kwargs)
                 x_tmp = self.reverse_sde_step(x_yuan, score, t)
