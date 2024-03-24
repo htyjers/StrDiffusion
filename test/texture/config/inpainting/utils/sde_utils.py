@@ -294,13 +294,9 @@ class IRSDE(SDE):
             ##############################
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach()).view(-1)
             u = 20
-            # T=100 U=20
-            # T=400 U=3
+            num_constraint = 1
             for i in range(1,u):
-                if i <= u // 2:
-                    g = 2
-                else:
-                    g = 3
+                g = 1
                 if g + t > T:
                     g = T - t + 1
                     
@@ -316,12 +312,17 @@ class IRSDE(SDE):
                 score = self.score_fn(x_yuan, t, xs1, **kwargs)
                 x_tmp = self.reverse_sde_step(x_yuan, score, t)
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
-                if D_p < D_n:
+                if i>num_constraint:
+                    if D_p < D_n:
+                        x_yuan_tmp = x_tmp
+                        xs_t += xs1
+                        xs = xs1
+                    else:
+                        break
+                else:
                     x_yuan_tmp = x_tmp
                     xs_t += xs1
                     xs = xs1
-                else:
-                    break
             ##############################
             
             x_yuan = x_yuan_tmp
