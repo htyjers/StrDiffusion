@@ -281,7 +281,7 @@ class IRSDE(SDE):
         xs = S_LQ.clone()
 
         for t in tqdm(reversed(range(1, T+1))):
-            xs_optimum = S_sde.reverse_optimum_step(xs.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
+            xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
@@ -293,20 +293,22 @@ class IRSDE(SDE):
             #Adaptive Resampling Strategy
             ##############################
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach()).view(-1)
-            u = 4
+            u = 20
+            # T=100 U=20 g=2
+            # T=400 U=3 g=1
             for i in range(1,u):
                 if i <= u // 2:
-                    g = 1
+                    g = 2
                 else:
-                    g = 1
+                    g = 3
                 if g + t > T:
                     g = T - t + 1
                     
-                xs1 = (xs + xs_t) / 2
+                xs1 = xs_t / i
                 for j in range(0,g):
                     xs1 = S_sde.forward_step(xs1,t-1+j)
                 for z in reversed(range(0,j+1)):
-                    xs1_optimum = S_sde.reverse_optimum_step(xs1.cuda(), S_GT.cuda() * mask.cuda(), t+z).cuda()
+                    xs1_optimum = S_sde.reverse_optimum_step(xs1.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t+z).cuda()
                     scores = S_sde.score_fn(xs1, t+z)
                     xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
                     xs1 = xs1_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
@@ -316,7 +318,7 @@ class IRSDE(SDE):
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
                 if D_p < D_n:
                     x_yuan_tmp = x_tmp
-                    xs_t = xs
+                    xs_t += xs1
                     xs = xs1
                 else:
                     break
