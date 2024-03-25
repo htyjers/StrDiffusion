@@ -293,12 +293,14 @@ class IRSDE(SDE):
             #Adaptive Resampling Strategy
             ##############################
             D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach()).view(-1)
-            u = 20
-            num_constraint = 1
+            # T = 400, u_max = 4, u_min = 1, g = 1
+            # T = 100, u_max = 20, u_min = 2, g = 2
+            u_max = 4
+            u_min = 1
+            g = 1
+            if g + t > T:
+                g = T - t + 1
             for i in range(1,u):
-                g = 1
-                if g + t > T:
-                    g = T - t + 1
                     
                 xs1 = xs_t / i
                 for j in range(0,g):
@@ -312,7 +314,7 @@ class IRSDE(SDE):
                 score = self.score_fn(x_yuan, t, xs1, **kwargs)
                 x_tmp = self.reverse_sde_step(x_yuan, score, t)
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
-                if i>num_constraint:
+                if i>u_min:
                     if D_p < D_n:
                         x_yuan_tmp = x_tmp
                         xs_t += xs1
