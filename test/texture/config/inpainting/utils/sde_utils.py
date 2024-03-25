@@ -300,7 +300,7 @@ class IRSDE(SDE):
             g = 1
             if g + t > T:
                 g = T - t + 1
-            for i in range(1,u):
+            for i in range(1,u_max):
                     
                 xs1 = xs_t / i
                 for j in range(0,g):
