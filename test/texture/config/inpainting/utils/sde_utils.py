@@ -276,7 +276,6 @@ class IRSDE(SDE):
         mask = mask.cuda()
         
         xt = xt.cuda()
-        x = xt.clone()
         x_yuan = xt.clone()
         xs = S_LQ.clone()
 
