@@ -268,7 +268,8 @@ class IRSDE(SDE):
         assert betas.shape == (num_diffusion_timesteps,)
         return betas
     
-    def reverse_sde(self, xt, T=-1, save_states=False, save_dir='sde_state',GT = None, mask = None, S_sde = None, S_GT = None, S_LQ = None, dis = None, S_LQs = None, **kwargs):
+
+    def reverse_sde(self, xt, T=-1, save_states=False, save_dir='sde_state',GT = None, mask = None, S_sde = None, S_GT = None, S_LQ = None, dis = None, **kwargs):
         T = self.T if T < 0 else T
         S_GT = S_GT.cuda()
         GT = GT.cuda()
@@ -276,21 +277,21 @@ class IRSDE(SDE):
         mask = mask.cuda()
         
         xt = xt.cuda()
-        x_yuan = xt.clone()
+        x_original = xt.clone()
         xs = S_LQ.clone()
-
+    
         for t in tqdm(reversed(range(1, T+1))):
             xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
             xs_t = xs
-
-            score= self.score_fn(x_yuan, t, xs, **kwargs)
-            x_yuan_tmp = self.reverse_sde_step(x_yuan, score, t)
-
-            #Adaptive Resampling Strategy
+    
+            score= self.score_fn(x_original, t, xs, **kwargs)
+            x_updated = self.reverse_sde_step(x_original, score, t)
+    
+            # Adaptive Resampling Strategy
             ##############################
-            D_n = dis(torch.tensor(t).reshape(1,), x_yuan_tmp.detach() * mask.cuda(), xs.detach()).view(-1)
+            D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
             
             u_max = 20
             u_min = 2
@@ -306,45 +307,26 @@ class IRSDE(SDE):
                     scores = S_sde.score_fn(xs1, t+z)
                     xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
                     
-                score = self.score_fn(x_yuan, t, xs1, **kwargs)
-                x_tmp = self.reverse_sde_step(x_yuan, score, t)
+                score = self.score_fn(x_original, t, xs1, **kwargs)
+                x_tmp = self.reverse_sde_step(x_original, score, t)
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
                 if i>u_min:
                     if D_p < D_n:
-                        x_yuan_tmp = x_tmp
+                        x_updated = x_tmp
                         xs_t += xs1
                         xs = xs1
                     else:
                         break
                 else:
-                    x_yuan_tmp = x_tmp
+                    x_updated = x_tmp
                     xs_t += xs1
                     xs = xs1
             ##############################
             
-            x_yuan = x_yuan_tmp
+            x_original = x_updated
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
-
-        return GT.cuda() * mask.cuda() + x_yuan * (1 - mask.cuda())
-
-
     
-    def reverse_ode(self, xt, T=-1, save_states=False, save_dir='ode_state', **kwargs):
-        T = self.T if T < 0 else T
-        x = xt.clone()
-        for t in tqdm(reversed(range(1, T + 1))):
-            score = self.score_fn(x, t, **kwargs)
-            x = self.reverse_ode_step(x, score, t)
-
-            if save_states: # only consider to save 100 images
-                interval = self.T // 100
-                if t % interval == 0:
-                    idx = t // interval
-                    os.makedirs(save_dir, exist_ok=True)
-                    tvutils.save_image(x.data, f'{save_dir}/state_{idx}.png', normalize=False)
-
-        return x
-
+        return GT.cuda() * mask.cuda() + x_original * (1 - mask.cuda())
 
     # sample ode using Black-box ODE solver (not used)
     def ode_sampler(self, xt, rtol=1e-5, atol=1e-5, method='RK45', eps=1e-3,):
