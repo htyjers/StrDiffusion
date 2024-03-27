@@ -314,13 +314,13 @@ class IRSDE(SDE):
                     if D_p < D_n:
                         x_updated = x_tmp
                         xs_t += xs1
-                        xs = xs1
+                        xs = xs_t / (i+1)
                     else:
                         break
                 else:
                     x_updated = x_tmp
                     xs_t += xs1
-                    xs = xs1
+                    xs = xs_t / (i+1)
             ##############################
             
             x_original = x_updated
