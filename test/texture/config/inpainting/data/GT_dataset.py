@@ -131,7 +131,7 @@ class GTDataset(data.Dataset):
             np.ascontiguousarray(np.transpose(img_GT, (2, 0, 1)))
         ).float()
         
-        GT_edge,GT_gray = image_to_edge(img_GT, sigma=1.)
+        GT_edge,GT_gray = image_to_edge(img_GT, sigma=2.)
         return {"GT": img_GT, "GT_path": GT_path, "GT_edge": GT_edge, "GT_gray": GT_gray}
 
     def __len__(self):
