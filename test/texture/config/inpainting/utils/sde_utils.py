@@ -310,7 +310,7 @@ class IRSDE(SDE):
                 score = self.score_fn(x_original, t, xs1, **kwargs)
                 x_tmp = self.reverse_sde_step(x_original, score, t)
                 D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
-                if i>u_min:
+                if i>=u_min:
                     if D_p < D_n:
                         x_updated = x_tmp
                         xs_t += xs1
