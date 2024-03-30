@@ -281,27 +281,26 @@ class IRSDE(SDE):
         xs = S_LQ.clone()
     
         for t in tqdm(reversed(range(1, T+1))):
-            xs_optimum = S_sde.reverse_optimum_step(xs_optimum.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
+            xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
             xs_t = xs
     
-            score= self.score_fn(x_original, t, xs, **kwargs)
+            score = self.score_fn(x_original, t, xs, **kwargs)
             x_updated = self.reverse_sde_step(x_original, score, t)
     
             # Adaptive Resampling Strategy
             ##############################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T=100,u_max = 20,u_min = 2,step = 2
-            # T=400,u_max = 8,u_min = 1,step = 2
-            u_max = 20
-            u_min = 2
+            # T=100,u_max = 15,u_min = 2,step = 2
+            # T=400,u_max = 4,u_min = 1,step = 2
+            u_max = 4
+            u_min = 1
             step = 2
             if step + t > T:
                 step = T - t + 1
             for i in range(1,u_max):
-                    
-                xs1 = xs_t / i
+                xs1 = xs
                 for j in range(0,step):
                     xs1 = S_sde.forward_step(xs1,t-1+j)
                 for z in reversed(range(0,j+1)):
@@ -322,10 +321,12 @@ class IRSDE(SDE):
                     x_updated = x_tmp
                     xs_t += xs1
                     xs = xs_t / (i+1)
+                    D_n = D_p
             ##############################
             
             x_original = x_updated
-            xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
+            if t > T * 0.6:
+                xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
     
         return GT.cuda() * mask.cuda() + x_original * (1 - mask.cuda())
 
