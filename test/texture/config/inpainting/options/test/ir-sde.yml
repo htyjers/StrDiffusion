@@ -7,7 +7,7 @@ gpu_ids: [3]
 
 sde:
   max_sigma: 30
-  T: 400
+  T: 100
   schedule: cosine
   eps: 0.005
 
