@@ -22,7 +22,7 @@ In summary, our StrDiffusion reveals:
 
   
 #
-## Dependenices
+## Dependencies
 
 * OS: Ubuntu 20.04.6
 * nvidia :
