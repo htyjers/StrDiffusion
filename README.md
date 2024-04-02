@@ -1,6 +1,6 @@
 # StrDiffusion
 
-### [Paper](https://github.com/htyjers/StrDiffusion) | [Supplementary Material](https://github.com/htyjers/StrDiffusion) | [BibTex](https://github.com/htyjers/StrDiffusion?tab=readme-ov-file#citation)
+### [Paper](https://arxiv.org/abs/2403.19898) | [BibTex](https://github.com/htyjers/StrDiffusion?tab=readme-ov-file#citation)
 
 This repository is the official code for the paper "Structure Matters: Tackling the Semantic Discrepancy in Diffusion Models for Image Inpainting" by Haipeng Liu (hpliu_hfut@hotmail.com), Yang Wang (corresponding author: yangwang@hfut.edu.cn), Biao Qian, Meng Wang, Yong Rui. *CVPR 2024, Seattle, USA*
 
@@ -108,7 +108,14 @@ Python3 ./test/texture/config/inpainting/test.py
 If any part of our paper and repository is helpful to your work, please generously cite with:
 
 ```
-
+@misc{liu2024structure,
+      title={Structure Matters: Tackling the Semantic Discrepancy in Diffusion Models for Image Inpainting}, 
+      author={Haipeng Liu and Yang Wang and Biao Qian and Meng Wang and Yong Rui},
+      year={2024},
+      eprint={2403.19898},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 ```
 
 This implementation is based on / inspired by:
