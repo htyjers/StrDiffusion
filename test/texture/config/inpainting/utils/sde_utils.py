@@ -322,13 +322,12 @@ class IRSDE(SDE):
                     x_updated = x_tmp
                     xs_t = xs1
                     D_n = D_p
-            ##############################
-            
-            x_original = x_updated
             if t > T * 0.7:
                 xs = xs_optimum * mask.cuda() + xs_t * (1 - mask.cuda())
             else:
                 xs = (xs + xs_t) / 2
+            ##############################
+            x_original = x_updated
         return GT.cuda() * mask.cuda() + x_original * (1 - mask.cuda())
 
     # sample ode using Black-box ODE solver (not used)
