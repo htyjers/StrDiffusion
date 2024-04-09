@@ -201,8 +201,7 @@ class DenoisingModel(BaseModel):
         yt_1_optimum = sde.reverse_optimum_step(self.state, self.state_0, timesteps)
         timesteps = timesteps.to(self.device)
         # Get noise and score
-        S_timestep, S_states = self.S_sde.generate_random_states_texture(x0=self.S_GT, mu=self.S_LQ * self.mask, timesteps = timesteps - 1)
-        S_optimum = self.S_sde.reverse_optimum_step(S_states, self.S_GT, S_timestep)
+        S_timestep, S_optimum = self.S_sde.generate_random_states_texture(x0=self.S_GT, mu=self.S_LQ * self.mask, timesteps = timesteps - 1)
 
         self.optimizer_d.zero_grad()
         D_real = self.dis(timesteps.squeeze(), yt_1_optimum.detach(),S_optimum.detach())  #(t, yt_1,xt_1) -- real 
