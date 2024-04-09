@@ -281,53 +281,56 @@ class IRSDE(SDE):
         xs = S_LQ.clone()
     
         for t in tqdm(reversed(range(1, T+1))):
-            xs_optimum = S_sde.reverse_optimum_step(xs.cuda() * mask.cuda(), S_GT.cuda() * mask.cuda(), t).cuda()
+            xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t-1)
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
-            xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
             xs_t = xs
     
-            score = self.score_fn(x_original, t, xs, **kwargs)
-            x_updated = self.reverse_sde_step(x_original, score, t)
+            score_original = self.score_fn(x_original, t, xs, **kwargs)
+            x_updated = self.reverse_sde_step(x_original, score_original, t)
     
-            # Adaptive Resampling Strategy
-            ##############################
+            # Adaptive Resampling Strategy (Updated Version) #
+            ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T=100,u_max = 15
-            # T=400,u_max = 6
-            u_max = 6
+            # T = 100, u_max = 20, u_min = 3
+            # T = 400, u_max = 4, u_min = 2
+            u_max = 4
             u_min = 2
-            step = 2
+            step = 0
+            if step%10 == 0:
+                step = 10
             if step + t > T:
                 step = T - t + 1
             for i in range(1,u_max):
-                xs1 = xs_t
-                for j in range(0,step):
-                    xs1 = S_sde.forward_step(xs1,t-1+j)
-                for z in reversed(range(0,j+1)):
-                    scores = S_sde.score_fn(xs1, t+z)
-                    xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
-                    
-                xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
-                score = self.score_fn(x_original, t, xs1, **kwargs)
-                x_tmp = self.reverse_sde_step(x_original, score, t)
-                D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
-                if i>=u_min:
-                    if D_p < D_n:
-                        x_updated = x_tmp
-                        xs_t = xs1
+                if step != 0:
+                    xs1 = xs_t
+                    for j in range(0,step):
+                        xs1 = S_sde.forward_step(xs1,t-1+j)
+                    for z in reversed(range(0,j+1)):
+                        scores = S_sde.score_fn(xs1, t+z)
+                        xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
+                        
+                    xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
+                    score = self.score_fn(x_original, t, xs1, **kwargs)
+                    score = score * 1.3 - score_original * 0.3  # Similar to the classifier-free guidance
+                    x_tmp = self.reverse_sde_step(x_original, score, t)
+                    D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
+                    if i>=u_min:
+                        if D_p < D_n:
+                            x_updated = x_tmp
+                            xs_t = xs1
+                        else:
+                            break
                     else:
-                        break
+                        x_updated = x_tmp
+                        xs_t = (xs1 + xs_t) / 2
+                        score_original = score
+                        D_n = D_p
                 else:
-                    x_updated = x_tmp
-                    xs_t = xs1
-                    D_n = D_p
-            if t > T * 0.7:
-                xs = xs_optimum * mask.cuda() + xs_t * (1 - mask.cuda())
-            else:
-                xs = (xs + xs_t) / 2
+                    break
             ##############################
             x_original = x_updated
+            xs = xs_optimum * mask.cuda() + xs_t * (1 - mask.cuda())
         return GT.cuda() * mask.cuda() + x_original * (1 - mask.cuda())
 
     # sample ode using Black-box ODE solver (not used)
