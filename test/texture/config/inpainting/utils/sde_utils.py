@@ -269,7 +269,7 @@ class IRSDE(SDE):
         return betas
     
 
-    def reverse_sde(self, xt, T=-1, save_states=False, save_dir='sde_state',GT = None, mask = None, S_sde = None, S_GT = None, S_LQ = None, dis = None, **kwargs):
+    def reverse_sde(self, xt, T=-1, save_states=False, save_dir='sde_state',GT = None, mask = None, S_sde = None, S_GT = None, S_LQ = None, dis = None, S_LQs = None, **kwargs):
         T = self.T if T < 0 else T
         S_GT = S_GT.cuda()
         GT = GT.cuda()
