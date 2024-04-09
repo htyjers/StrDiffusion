@@ -319,20 +319,20 @@ class IRSDE(SDE):
 
         
     # sample states for training in texture
-    def generate_random_states_texture(self, x0, mu, timesteps):
+    def generate_states(self, x0, mu, timesteps):
         x0 = x0.to(self.device)
         mu = mu.to(self.device)
 
         self.set_mu(mu)
 
         batch = x0.shape[0]
-        timesteps = timesteps.reshape(batch, 1, 1, 1).long()
+        timesteps = torch.tensor(timesteps, dtype=torch.int32).view(1, 1, 1, 1).long()
         state_mean = self.mu_bar(x0, timesteps)
         noises = torch.randn_like(state_mean)
         noise_level = self.sigma_bar(timesteps)
         noisy_states = noises * noise_level + state_mean
 
-        return timesteps, noisy_states.to(torch.float32)
+        return noisy_states.to(torch.float32)
 
     def noise_state(self, tensor):
         return tensor + torch.randn_like(tensor) * self.max_sigma
