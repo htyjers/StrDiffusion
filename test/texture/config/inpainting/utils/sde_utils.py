@@ -284,7 +284,7 @@ class IRSDE(SDE):
             xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t-1)
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
-            xs_t = xs
+            xs_t = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
     
             score_original = self.score_fn(x_original, t, xs, **kwargs)
             x_updated = self.reverse_sde_step(x_original, score_original, t)
@@ -310,7 +310,6 @@ class IRSDE(SDE):
             for i in range(1,u_max):
                 if step != 0:
                     xs1 = xs_t
-                    xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     for j in range(0,step):
                         xs1 = S_sde.forward_step(xs1,t-1+j)
                     for z in reversed(range(0,j+1)):
