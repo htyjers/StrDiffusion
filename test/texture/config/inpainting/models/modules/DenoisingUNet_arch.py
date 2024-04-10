@@ -266,9 +266,6 @@ class ConditionalUNet(nn.Module):
         h = [] 
         gh = []
 
-        
-        entropy = torch.zeros(xt.shape[0]).cuda()
-            
         for b1, b2, attn, downsample, guide in self.downs:
             x = b1(x, t)
             h.append(x)
