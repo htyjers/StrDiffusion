@@ -310,12 +310,12 @@ class IRSDE(SDE):
             for i in range(1,u_max):
                 if step != 0:
                     xs1 = xs_t
+                    xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     for j in range(0,step):
                         xs1 = S_sde.forward_step(xs1,t-1+j)
                     for z in reversed(range(0,j+1)):
                         scores = S_sde.score_fn(xs1, t+z)
                         xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
-                        
                     xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     score = self.score_fn(x_original, t, xs1, **kwargs)
                     score = score * (1+w) - score_original * w  # Similar to the classifier-free guidance
