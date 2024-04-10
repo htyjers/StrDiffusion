@@ -284,12 +284,12 @@ class IRSDE(SDE):
             xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t-1)
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
-            xs_t = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
+            xs_t = xs
     
             score_original = self.score_fn(x_original, t, xs, **kwargs)
             x_updated = self.reverse_sde_step(x_original, score_original, t)
     
-            # Adaptive Resampling Strategy (Updated Version) #
+            # Adaptive Resampling Strategy #
             ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
             # -----------------------------------
@@ -297,9 +297,9 @@ class IRSDE(SDE):
             # -----------------------------------
             # |  100  |   20  |   3   |   0.3   |
             # -----------------------------------
-            # |  400  |    5  |   2   |   0.5   |
+            # |  400  |   6   |   2   |   0.5   |
             # -----------------------------------
-            u_max = 5
+            u_max = 6
             u_min = 2
             w = 0.5
             step = 0
