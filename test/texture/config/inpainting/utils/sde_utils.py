@@ -323,7 +323,7 @@ class IRSDE(SDE):
                     if i>=u_min:
                         if D_p < D_n:
                             x_updated = x_tmp
-                            xs_t = (xs1 + xs_t) / 2
+                            xs_t = xs1 
                         else:
                             break
                     else:
