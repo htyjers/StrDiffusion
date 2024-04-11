@@ -295,7 +295,7 @@ class IRSDE(SDE):
             # -----------------------------------
             # |   T   | u_max | u_min |    w    |
             # -----------------------------------
-            # |  100  |   25  |   3   |   0.5   |
+            # |  100  |   25  |   4   |   0.2   |
             # -----------------------------------
             # |  400  |   6   |   2   |   0.5   |
             # -----------------------------------
@@ -317,13 +317,14 @@ class IRSDE(SDE):
                         xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
                     xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     score = self.score_fn(x_original, t, xs1, **kwargs)
-                    score = score * (1+w) - score_original * w  # Similar to the classifier-free guidance
+                    score = score_original * (1+w) - score * w  # Similar to the classifier-free guidance
                     x_tmp = self.reverse_sde_step(x_original, score, t)
                     D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
                     if i>=u_min:
                         if D_p < D_n:
                             x_updated = x_tmp
                             xs_t = xs1 
+                            score_original = score
                         else:
                             break
                     else:
