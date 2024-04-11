@@ -297,13 +297,13 @@ class IRSDE(SDE):
             # -----------------------------------
             # |  100  |   25  |   4   |   0.2   |
             # -----------------------------------
-            # |  400  |   6   |   2   |   0.5   |
+            # |  400  |   5   |   2   |   0.2   |
             # -----------------------------------
-            u_max = 6
+            u_max = 2
             u_min = 2
-            w = 0.5
+            w = 0.2
             step = 0
-            if step%10 == 0:
+            if t % 10 == 0 and t >= 0.4*T:
                 step = 10
             if step + t > T:
                 step = T - t + 1
@@ -323,7 +323,7 @@ class IRSDE(SDE):
                     if i>=u_min:
                         if D_p < D_n:
                             x_updated = x_tmp
-                            xs_t = xs1 
+                            xs_t = (xs1 + xs_t) / 2
                             score_original = score
                         else:
                             break
