@@ -16,7 +16,7 @@ import models.lr_scheduler as lr_scheduler
 import models.networks as networks
 from models.optimizer import Lion
 
-from models.modules.loss import MatchingLoss,MatchingLoss1
+from models.modules.loss import MatchingLoss
 
 from .base_model import BaseModel
 
