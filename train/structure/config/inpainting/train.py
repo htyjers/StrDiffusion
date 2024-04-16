@@ -53,7 +53,7 @@ def init_dist(backend="nccl", **kwargs):
 def main():
     #### setup options of three networks
     parser = argparse.ArgumentParser()
-    parser.add_argument("-opt", default="./trian/structure/config/inpainting/options/train/ir-sde.yml", type=str, help="Path to option YMAL file.")
+    parser.add_argument("-opt", default="./train/structure/config/inpainting/options/train/ir-sde.yml", type=str, help="Path to option YMAL file.")
     parser.add_argument(
         "--launcher", choices=["none", "pytorch"], default="none", help="job launcher"
     )
