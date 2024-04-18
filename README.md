@@ -82,7 +82,7 @@ Python3 ./train/discriminator/config/inpainting/train.py
    * *You can set the path of Structure Denoising Model in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L45)*
    * *You can set the path of Discriminator Network in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L46)*
     
-3. For different [T](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L10), you can set the corresponding hyperparameters of adaptive resampling strategy in [here](https://github.com/htyjers/StrDiffusion/blob/c0d4c37b7d61ed722c4f27c774ae558ec56d5166/test/texture/config/inpainting/utils/sde_utils.py#L295-L301)
+3. For different [T](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L10), you can set the corresponding hyperparameters of adaptive resampling strategy in [here](https://github.com/htyjers/StrDiffusion/blob/0644a82e3833401f4e6b38b7cf68b281ad421a51/test/texture/config/inpainting/utils/sde_utils.py#L295)
    
 4. Run the following command:
 ```
