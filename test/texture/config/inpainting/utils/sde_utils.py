@@ -292,22 +292,15 @@ class IRSDE(SDE):
             # Adaptive Resampling Strategy #
             ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # -----------------------------------
-            # |   T   | u_max | u_min |    w    |
-            # -----------------------------------
-            # |  100  |   25  |   4   |   0.2   |
-            # -----------------------------------
-            # |  400  |   5   |   2   |   0.2   |
-            # -----------------------------------
-            u_max = 5
-            u_min = 2
-            w = 0.2
-            step = 0
-            if t % 10 == 0 and t >= 0.4*T:
-                step = 10
+            # T = 400, u = 5, jump = 10
+            u = 5
+            if t % jump == 0 and t >= 0.4*T:
+                step = jump
+            else:
+                step = 0
             if step + t > T:
                 step = T - t + 1
-            for i in range(1,u_max):
+            for i in range(1,u):
                 if step != 0:
                     xs1 = xs_t
                     for j in range(0,step):
@@ -317,21 +310,14 @@ class IRSDE(SDE):
                         xs1 = S_sde.reverse_sde_step(xs1, scores, t+z)
                     xs1 = xs_optimum * mask.cuda() + xs1 * (1 - mask.cuda())
                     score = self.score_fn(x_original, t, xs1, **kwargs)
-                    score = score_original * (1+w) - score * w
                     x_tmp = self.reverse_sde_step(x_original, score, t)
                     D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
-                    if i>=u_min:
-                        if D_p < D_n:
-                            x_updated = x_tmp
-                            xs_t = (xs1 + xs_t) / 2
-                            score_original = score
-                        else:
-                            break
-                    else:
+                    if D_p < D_n:
                         x_updated = x_tmp
+                        xs_t = xs1
+                    else:
                         xs_t = (xs1 + xs_t) / 2
-                        score_original = score
-                        D_n = D_p
+                        break
                 else:
                     break
             ##############################
