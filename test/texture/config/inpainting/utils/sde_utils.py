@@ -294,6 +294,7 @@ class IRSDE(SDE):
             ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
             # T = 400, u_max = 5, u_min = 2, jump = 16, re = 16;
+            # T = 100, u_max = 20, u_min = 4, jump = 4, re = 4.
             u_max = 5
             u_min = 2
             jump = 16
