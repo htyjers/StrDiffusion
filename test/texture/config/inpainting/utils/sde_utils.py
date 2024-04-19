@@ -293,12 +293,12 @@ class IRSDE(SDE):
             # Adaptive Resampling Strategy #
             ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T = 400, u_max = 5, u_min = 2, jump = 10, re = 10;
-            # T = 100, u_max = 25, u_min = 4, jump = 4, re = 4.
+            # T = 400, u_max = 5, u_min = 2, jump = 4, re = 4;
+            # T = 100, u_max = 25, u_min = 4, jump = 10, re = 10.
             u_max = 5
             u_min = 2
-            jump = 10
-            re = 10
+            jump = 4
+            re = 4
             step = 0
             if t % jump == 0 and t >= 0.4*T:
                 step = re
@@ -306,6 +306,7 @@ class IRSDE(SDE):
                 step = T - t + 1
             for i in range(1,u_max):
                 if step != 0:
+                    x_original = self.forward_step(x_updated,t-1)
                     xs1 = xs_t
                     for j in range(0,step):
                         xs1 = S_sde.forward_step(xs1,t-1+j)
@@ -319,15 +320,14 @@ class IRSDE(SDE):
                     D_p = dis(torch.tensor(t).reshape(1,), x_tmp.detach() * mask.cuda(), xs1.detach()).view(-1)
                     if i >= u_min:
                         if D_p < D_n:
-                            x_original = self.forward_step(x_tmp,t-1)
                             x_updated = x_tmp
                             xs_t = xs1
                         else: 
                             break
                     else:
-                        x_original = self.forward_step(x_tmp,t-1)
                         x_updated = x_tmp
                         xs_t = (xs1 + xs_t) / 2
+                        D_n = D_p
                 else:
                     break
             ##############################
