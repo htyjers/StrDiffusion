@@ -293,12 +293,12 @@ class IRSDE(SDE):
             # Adaptive Resampling Strategy #
             ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T = 400, u_max = 5, u_min = 2, jump = 16, re = 16;
+            # T = 400, u_max = 5, u_min = 2, jump = 10, re = 10;
             # T = 100, u_max = 25, u_min = 4, jump = 4, re = 4.
             u_max = 5
             u_min = 2
-            jump = 16
-            re = 16
+            jump = 10
+            re = 10
             step = 0
             if t % jump == 0 and t >= 0.4*T:
                 step = re
