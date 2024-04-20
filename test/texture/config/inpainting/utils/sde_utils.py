@@ -279,8 +279,26 @@ class IRSDE(SDE):
         xt = xt.cuda()
         x_original = xt.clone()
         xs = S_LQ.clone()
-    
-        for t in tqdm(reversed(range(1, T+1))):
+
+        ##################################################
+        # T = 400, ratio = 0.95;
+        # T = 100, ratio = 0.9.
+        ratio = 0.95
+        for t in tqdm(reversed(range(int(T * ratio), T+1))):#
+            xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t)
+            xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
+            scores = S_sde.score_fn(xs, t)
+            xs = S_sde.reverse_sde_step(xs, scores, t)
+        for t in tqdm(reversed(range(int(T * ratio), T+1))):#
+            score_original = self.score_fn(x_original, t, xs, **kwargs)
+            x_updated = self.reverse_sde_step(x_original, score_original, t)
+            x_original = x_updated
+        ##################################################
+
+        
+        # Adaptive Resampling Strategy #
+        ##################################################
+        for t in tqdm(reversed(range(1, int(T * ratio)))):# 
             xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t)
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
             scores = S_sde.score_fn(xs, t)
@@ -290,15 +308,13 @@ class IRSDE(SDE):
             score_original = self.score_fn(x_original, t, xs, **kwargs)
             x_updated = self.reverse_sde_step(x_original, score_original, t)
     
-            # Adaptive Resampling Strategy #
-            ##################################################
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T = 400, u_max =  5, u_min = 2, jump = 10, re = 10;
-            # T = 100, u_max = 25, u_min = 4, jump = 10, re = 10.
-            u_max = 5
-            u_min = 2
-            jump = 20
-            re = 10
+            # T = 400, u_max = 10, u_min = 3, jump = 15, re = 15;
+            # T = 100, u_max = 20, u_min = 4, jump = 10, re = 10.
+            u_max = 10
+            u_min = 3
+            jump = 15
+            re = 15
             step = 0
             if t % jump == 0 and t >= 0.4*T:
                 step = re
