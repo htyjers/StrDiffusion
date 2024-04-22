@@ -292,8 +292,8 @@ class IRSDE(SDE):
             x_updated = self.reverse_sde_step(x_original, score_original, t)
     
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T=400, u_max =  6, u_min = 3, jump = 5, re = 5
-            # T=100, u_max = 25, u_min = 4, jump = 2, re = 2
+            # Places2 -- T=400, u_max =  6, u_min = 3, jump = 5, re = 5
+            # Places2 -- T=100, u_max = 25, u_min = 4, jump = 2, re = 2
             u_max = 6
             u_min = 3
             jump = 5
