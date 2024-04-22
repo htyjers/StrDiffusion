@@ -282,8 +282,8 @@ class IRSDE(SDE):
 
         # Adaptive Resampling Strategy #
         ##################################################
-        for t in tqdm(reversed(range(1, int(T+1)))):# 
-            xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t)
+        for t in tqdm(reversed(range(int(0.4*T), int(T+1)))):# 
+            xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t-1)
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
             scores = S_sde.score_fn(xs, t)
             xs = S_sde.reverse_sde_step(xs, scores, t)
@@ -293,20 +293,17 @@ class IRSDE(SDE):
             x_updated = self.reverse_sde_step(x_original, score_original, t)
     
             D_n = dis(torch.tensor(t).reshape(1,), x_updated.detach() * mask.cuda(), xs.detach()).view(-1)
-            # T = 400, u_max =  6, u_min = 3, jump = 5, re = 5;
-            # T = 100, u_max = 25, u_min = 4, jump = 2, re = 2.
             u_max = 6
             u_min = 3
             jump = 5
             re = 5
             step = 0
-            if t % jump == 0 and t >= 0.4*T:
+            if t % jump == 0:
                 step = re
             if step + t > T:
                 step = T - t + 1
             for i in range(1,u_max):
                 if step != 0:
-                    x_original = self.forward_step(x_updated,t-1)
                     xs1 = xs_t
                     for j in range(0,step):
                         xs1 = S_sde.forward_step(xs1,t-1+j)
@@ -324,13 +321,22 @@ class IRSDE(SDE):
                         else: 
                             break
                     else:
-                        x_updated = x_tmp
-                        xs_t = (xs1 + xs_t)/2
+                        if D_p < D_n:
+                            x_updated = x_tmp
+                            xs_t = xs1
+                        else: 
+                            x_updated = (x_updated + x_tmp)/2
+                            xs_t = (xs1 + xs_t)/2
                 else:
                     break
-            ##############################
             x_original = x_updated
             xs = xs_optimum * mask.cuda() + xs_t * (1 - mask.cuda())
+            
+        for t in tqdm(reversed(range(1, int(0.4*T)))):# 
+            xs = torch.mean(x_original, dim=1, keepdim=True)
+            score_original = self.score_fn(x_original, t, xs, **kwargs)
+            x_original = self.reverse_sde_step(x_original, score_original, t)
+            
         return GT.cuda() * mask.cuda() + x_original * (1 - mask.cuda())
 
     # sample ode using Black-box ODE solver (not used)
