@@ -77,12 +77,12 @@ Python3 ./train/discriminator/config/inpainting/train.py
      
 2. Pre-trained models:
    
-   Download the pre-trained model of [Places2, T=400](https://pan.baidu.com/s/1vxZ57te6TratZwKsuUYV8Q?pwd=n8dr) or [Places2, T=100](https://pan.baidu.com/s/1yw8lE3Vk_3IsR3HoVf84Ww?_at_=1713468801558#list/path=%2F), then get into the `StrDiffusion/test/texture` directory and modify the model paths in option files in `/config/inpainting/options/test/ir-sde.yml`
+   Download the pre-trained model of [Places2, T=400](https://pan.baidu.com/s/1vxZ57te6TratZwKsuUYV8Q?pwd=n8dr), [Places2, T=100](https://pan.baidu.com/s/1yw8lE3Vk_3IsR3HoVf84Ww?_at_=1713468801558#list/path=%2F), [PSV, T=100](https://pan.baidu.com/s/1pI6sN_wZL_vvmuhvu1GHmw?pwd=7b54), then get into the `StrDiffusion/test/texture` directory and modify the model paths in option files in `/config/inpainting/options/test/ir-sde.yml`
    * *You can set the path of Texture Denoising Model in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L44)*
    * *You can set the path of Structure Denoising Model in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L45)*
    * *You can set the path of Discriminator Network in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L46)*
     
-3. For different [T](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L10), you can set the corresponding hyperparameters of adaptive resampling strategy in [here](https://github.com/htyjers/StrDiffusion/blob/4d9daff1d1111acbe791b4d9e174561a02feb968/test/texture/config/inpainting/utils/sde_utils.py#L312-L313)
+3. For different [T](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L10), you can set the corresponding hyperparameters of adaptive resampling strategy in [here](https://github.com/htyjers/StrDiffusion/blob/772dd44b5595293d95efa5d92745ce48db185d66/test/texture/config/inpainting/utils/sde_utils.py#L295-L296)
    
 4. Run the following command:
 ```
