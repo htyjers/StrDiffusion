@@ -281,7 +281,7 @@ class IRSDE(SDE):
         xs = S_LQ.clone()
 
         # Adaptive Resampling Strategy #
-        for t in tqdm(reversed(range(int(0.4*T), int(T+1)))):# 
+        for t in tqdm(reversed(range(int(0.4*T), int(T+1)))):# Early Stage
             xs_optimum = S_sde.generate_states(x0=S_GT.cuda() * mask.cuda(), mu=S_LQs.cuda() * mask.cuda(), timesteps = t-1)
             xs = xs_optimum * mask.cuda() + xs * (1 - mask.cuda())
             scores = S_sde.score_fn(xs, t)
@@ -333,7 +333,7 @@ class IRSDE(SDE):
             x_original = x_updated
             xs = xs_optimum * mask.cuda() + xs_t * (1 - mask.cuda())
             
-        for t in tqdm(reversed(range(1, int(0.4*T)))):# 
+        for t in tqdm(reversed(range(1, int(0.4*T)))):# Late Stage
             xs = torch.mean(x_original, dim=1, keepdim=True)
             score_original = self.score_fn(x_original, t, xs, **kwargs)
             x_original = self.reverse_sde_step(x_original, score_original, t)
