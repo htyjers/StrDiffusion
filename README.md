@@ -100,7 +100,7 @@ Python3 ./test/texture/config/inpainting/test.py
 
 ![](image/image2.png)
 
-- Due to the limited of the page, we list our quantitative results of PSV as follow:
+- Due to page limitation, we list our quantitative results of PSV as follow:
   
 ![](image/table.png)
 
