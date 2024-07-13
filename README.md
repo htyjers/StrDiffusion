@@ -100,7 +100,7 @@ Python3 ./test/texture/config/inpainting/test.py
 
 ![](image/image2.png)
 
-- Due to page limitation, we list our quantitative results of PSV as follow:
+- Due to the page limitations of CVPR, we only provided the quantitative results for **Places2** and **CelebA**, the two largest datasets, omitting the smallest dataset, **PSV**. Therefore, we provide the quantitative results for PSV here for your reference:
   
 ![](image/table.png)
 
