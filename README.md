@@ -75,7 +75,7 @@ Python3 ./train/discriminator/config/inpainting/train.py
    * *You can set the mask path in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L15)*
    * *You can set the image path in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L23)*
      
-2. Pre-trained models:
+2. ★★**Pre-trained models**★★:
    
    Download the pre-trained model of [Places2, T=400](https://pan.baidu.com/s/1TXnqIuqf-xbjZd85ZyRj4A?pwd=tsr3), [PSV, T=100](https://pan.baidu.com/s/16OIfDYN1z1lQFD5OzZi9_A?pwd=uw6n)
    , then get into the `StrDiffusion/test/texture` directory and modify the model paths in option files in `/config/inpainting/options/test/ir-sde.yml`
