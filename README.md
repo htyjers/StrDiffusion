@@ -77,7 +77,7 @@ Python3 ./train/discriminator/config/inpainting/train.py
      
 2. ★★**Pre-trained models**★★:
    
-   Download the pre-trained model of [Places2, T=400](https://pan.baidu.com/s/1TXnqIuqf-xbjZd85ZyRj4A?pwd=tsr3), [PSV, T=100](https://pan.baidu.com/s/16OIfDYN1z1lQFD5OzZi9_A?pwd=uw6n)
+   Download the pre-trained model of [Places2, T=400](https://pan.baidu.com/s/1TXnqIuqf-xbjZd85ZyRj4A?pwd=tsr3), [PSV, T=100](https://pan.baidu.com/s/16OIfDYN1z1lQFD5OzZi9_A?pwd=uw6n) and [Google Drive](https://drive.google.com/drive/folders/1btmHQfbWa0oirFhaIuzVblaLZenMS9Xz?usp=sharing)
    , then get into the `StrDiffusion/test/texture` directory and modify the model paths in option files in `/config/inpainting/options/test/ir-sde.yml`
    * *You can set the path of Texture Denoising Model in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L44)*
    * *You can set the path of Structure Denoising Model in [here](https://github.com/htyjers/StrDiffusion/blob/5749a214bb39754be165fa2bf76f96f13bc3e4a3/test/texture/config/inpainting/options/test/ir-sde.yml#L45)*
